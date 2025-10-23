@@ -1,3 +1,6 @@
+# Binaries
+bin/
+
 # Python virtual environment
 venv/
 

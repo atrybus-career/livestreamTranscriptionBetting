@@ -2,6 +2,10 @@
 
 A real-time system that transcribes YouTube livestreams to detect betting-related keywords and displays the results on a live dashboard.
 
+# Demo Video
+
+https://www.youtube.com/watch?v=OyneyyiWA_w
+
 ## How It Works
 
 The system connects to a YouTube livestream, transcribes the audio in real-time, and identifies specific keywords.
