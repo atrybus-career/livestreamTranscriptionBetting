@@ -1,0 +1,11 @@
+# Python virtual environment
+venv/
+
+# Node.js dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Google Cloud credentials
+*.json

@@ -1,0 +1,25 @@
+# Core dependencies for YouTube livestream transcription
+yt-dlp>=2023.12.30
+SpeechRecognition>=3.10.0
+openai-whisper>=20231117
+pyaudio>=0.2.11
+numpy>=1.24.0
+asyncio-mqtt>=0.16.1
+python-dotenv>=1.0.0
+
+# Google Cloud for improved, low-latency STT
+google-cloud-speech
+
+# Audio processing
+librosa>=0.10.1
+soundfile>=0.12.1
+
+# Utilities
+colorama>=0.4.6
+rich>=13.7.0
+click>=8.1.7
+
+# Development dependencies
+pytest>=7.4.0
+black>=23.0.0
+flake8>=6.0.0

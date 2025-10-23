@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Betting Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #202124;
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 500;
+            color: #202124;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .material-icons {
+            font-size: 24px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-connected {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-disconnected {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-connected .status-dot {
+            background-color: #4caf50;
+        }
+
+        .status-disconnected .status-dot {
+            background-color: #f44336;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 24px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 150px);
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header h2 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #5f6368;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .card-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .card-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .card-body::-webkit-scrollbar-thumb {
+            background: #dadce0;
+            border-radius: 4px;
+        }
+
+        .card-body::-webkit-scrollbar-thumb:hover {
+            background: #bdc1c6;
+        }
+
+        .transcript-item {
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+            animation: slideIn 0.3s ease;
+        }
+
+        .transcript-item:hover {
+            background-color: #f1f3f4;
+            border-left-color: #1a73e8;
+        }
+
+        .transcript-item.interim {
+            color: #5f6368;
+            font-style: italic;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .keyword {
+            background-color: #fef7e0;
+            color: #ea8600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            border: 1px solid #fbbc04;
+        }
+
+        .event-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: eventSlide 0.4s ease;
+        }
+
+        @keyframes eventSlide {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .event-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .event-time {
+            font-size: 12px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .event-keywords {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .event-keywords span {
+            background-color: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            margin-right: 6px;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+
+        .event-text {
+            font-size: 14px;
+            font-style: italic;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: #5f6368;
+        }
+
+        .empty-state .material-icons {
+            font-size: 64px;
+            color: #dadce0;
+            margin-bottom: 16px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <h1>
+                <span class="material-icons">trending_up</span>
+                Live Betting System
+            </h1>
+            <div id="status" class="status-badge status-disconnected">
+                <span class="status-dot"></span>
+                <span id="status-text">Connecting...</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>
+                    <span class="material-icons">subtitles</span>
+                    Live Transcript
+                </h2>
+            </div>
+            <div class="card-body" id="transcript">
+                <div class="empty-state">
+                    <span class="material-icons">mic</span>
+                    <p>Waiting for transcript data...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>
+                    <span class="material-icons">notifications_active</span>
+                    Betting Events
+                </h2>
+            </div>
+            <div class="card-body" id="events">
+                <div class="empty-state">
+                    <span class="material-icons">event_note</span>
+                    <p>No betting events detected yet...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const statusEl = document.getElementById('status');
+        const statusTextEl = document.getElementById('status-text');
+        const transcriptEl = document.getElementById('transcript');
+        const eventsEl = document.getElementById('events');
+        const wsUri = "ws://localhost:8765";
+        
+        let hasTranscripts = false;
+        let hasEvents = false;
+        let currentTranscriptItem = null;
+
+        function connect() {
+            const socket = new WebSocket(wsUri);
+
+            socket.onopen = () => {
+                console.log("Connected to WebSocket server.");
+                statusEl.className = "status-badge status-connected";
+                statusTextEl.textContent = "Connected";
+            };
+
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'transcription') {
+                    updateTranscript(data);
+                    if (data.keywords && data.keywords.length > 0) {
+                        createBettingEvent(data);
+                    }
+                }
+            };
+
+            socket.onclose = () => {
+                console.log("WebSocket connection closed. Reconnecting...");
+                statusEl.className = "status-badge status-disconnected";
+                statusTextEl.textContent = "Disconnected";
+                setTimeout(connect, 3000);
+            };
+
+            socket.onerror = (error) => {
+                console.error("WebSocket error:", error);
+                socket.close();
+            };
+        }
+
+        function highlightKeywords(text, keywords) {
+            if (!keywords || keywords.length === 0) {
+                return text;
+            }
+            const regex = new RegExp(`\\b(${keywords.join('|')})\\b`, 'gi');
+            return text.replace(regex, '<span class="keyword">$1</span>');
+        }
+
+        function updateTranscript(data) {
+            if (!hasTranscripts) {
+                transcriptEl.innerHTML = '';
+                hasTranscripts = true;
+            }
+
+            // If the result is not final, we update the last transcript item
+            if (!data.is_final) {
+                if (!currentTranscriptItem) {
+                    currentTranscriptItem = document.createElement('div');
+                    currentTranscriptItem.className = 'transcript-item interim';
+                    transcriptEl.appendChild(currentTranscriptItem);
+                }
+                currentTranscriptItem.innerHTML = highlightKeywords(data.text, data.keywords);
+            } else {
+                // If the result is final, we solidify the last item and clear the current one
+                if (currentTranscriptItem) {
+                    currentTranscriptItem.innerHTML = highlightKeywords(data.text, data.keywords);
+                    currentTranscriptItem.classList.remove('interim');
+                    currentTranscriptItem = null;
+                } else {
+                    // If there was no interim result, create a new final item
+                    const item = document.createElement('div');
+                    item.className = 'transcript-item';
+                    item.innerHTML = highlightKeywords(data.text, data.keywords);
+                    transcriptEl.appendChild(item);
+                }
+            }
+            
+            transcriptEl.scrollTop = transcriptEl.scrollHeight;
+        }
+
+        function createBettingEvent(data) {
+            // Only create events for final results to avoid duplicates
+            if (!data.is_final) {
+                return;
+            }
+        
+            if (!hasEvents) {
+                eventsEl.innerHTML = '';
+                hasEvents = true;
+            }
+
+            const eventCard = document.createElement('div');
+            eventCard.className = 'event-card';
+            
+            const time = new Date(data.timestamp * 1000).toLocaleTimeString();
+            
+            const keywordBadges = data.keywords.map(kw => 
+                `<span>${kw}</span>`
+            ).join('');
+            
+            eventCard.innerHTML = `
+                <div class="event-header">
+                    <div class="event-time">
+                        <span class="material-icons" style="font-size: 14px;">access_time</span>
+                        ${time}
+                    </div>
+                </div>
+                <div class="event-keywords">
+                    ${keywordBadges}
+                </div>
+                <div class="event-text">
+                    "${data.text}"
+                </div>
+            `;
+            
+            eventsEl.prepend(eventCard);
+            
+            // Keep only the last 50 events
+            while (eventsEl.children.length > 50) {
+                eventsEl.removeChild(eventsEl.lastChild);
+            }
+        }
+
+        // Initial connection
+        connect();
+    </script>
+</body>
+</html>
