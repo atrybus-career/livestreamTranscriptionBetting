@@ -2,6 +2,10 @@
 
 A real-time system that transcribes YouTube livestreams to detect betting-related keywords and displays the results on a live dashboard.
 
+# Note
+
+Roughly about 3-6 seconds ahead of youtube, since youtube buffers videos for quality. Thus, audio ready before video and audio displayed together.
+
 # Demo Video
 
 https://www.youtube.com/watch?v=OyneyyiWA_w
